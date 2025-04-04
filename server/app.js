@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
+const session = require('express-session');
 
 const router = require('./router.js');
 
@@ -30,6 +31,21 @@ app.use(bodyParser.json());
 app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
+
+// session configuration
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(
+  session({
+    key: 'sessionid',
+    secret: 'Domo Arigato',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
 
 router(app);
 
